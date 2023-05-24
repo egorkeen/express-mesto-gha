@@ -7,7 +7,7 @@ module.exports.getCards = (req, res) => {
       res.json(cards);
     })
     .catch((err) => {
-      res.status(500).json({ message: err });
+      res.status(500).send({ message: err });
     });
 };
 
@@ -18,42 +18,44 @@ module.exports.deleteCard = (req, res) => {
   Card.findByIdAndRemove(cardId)
     .then((deletedCard) => {
       if (!deletedCard) {
-        return res.status(404).json({ message: 'Карточка не найдена' });
+        return res.status(404).send({ message: 'Карточка не найдена' });
       }
-      return res.status(200).json({ message: 'Карточка успешно удалена' });
+      return res.status(200).send({ message: 'Карточка успешно удалена' });
     })
     .catch((err) => {
-      res.status(500).json({ message: err });
+      res.status(500).send({ message: err });
     });
 };
 
 // создать карточку
 module.exports.postCard = (req, res) => {
   const { name, link } = req.body;
-  const owner = req.user._id;
+  const userId = req.user;
 
-  Card.create({ name, link, owner })
+  Card.create({ name, link, owner: userId })
     .then((createdCard) => {
-      res.status(201).json(createdCard);
+      res.status(201).send({ data: createdCard });
       console.log('Запрос успешно выполен!');
     })
     .catch((err) => {
-      res.status(400).json({ message: err });
+      res.status(400).send({ message: err });
     });
 };
 
 // лайкнуть карточку
 module.exports.likeCard = (req, res) => {
+  const { cardId } = req.params;
+  const { userId } = req.user;
   Card.findByIdAndUpdate(
-    req.params.cardId,
-    { $addToSet: { likes: req.user._id } },
+    cardId,
+    { $addToSet: { likes: userId } },
     { new: true },
   )
     .then((updatedCard) => {
       if (!updatedCard) {
-        return res.status(404).json({ message: 'Карточка не найдена' });
+        return res.status(404).send({ message: 'Карточка не найдена' });
       }
-      return res.status(200).json(updatedCard);
+      return res.status(200).send({ data: updatedCard });
     })
     .catch((err) => {
       res.status(400).json({ message: err });
@@ -62,18 +64,20 @@ module.exports.likeCard = (req, res) => {
 
 // убрать лайк карточки
 module.exports.dislikeCard = (req, res) => {
+  const { cardId } = req.params;
+  const { userId } = req.user;
   Card.findByIdAndUpdate(
-    req.params.cardId,
-    { $pull: { likes: req.user._id } },
+    cardId,
+    { $pull: { likes: userId } },
     { new: true },
   )
     .then((updatedCard) => {
       if (!updatedCard) {
-        return res.status(404).json({ message: 'Карточка не найдена' });
+        return res.status(404).send({ message: 'Карточка не найдена' });
       }
-      return res.status(200).json(updatedCard);
+      return res.status(200).send({ data: updatedCard });
     })
     .catch((err) => {
-      res.status(400).json({ message: err });
+      res.status(400).send({ message: err });
     });
 };

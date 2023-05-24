@@ -1,17 +1,21 @@
 // express, b-p, mongoose
 const express = require('express');
 const mongoose = require('mongoose');
+const bodyParser = require('body-parser');
 // app
 const app = express();
 // роуты
 const cardsRouter = require('./routes/cards');
 const usersRouter = require('./routes/users');
 // порт
-const PORT = process.env.PORT || 3000;
+const PORT = process.env || 3000;
 // миддлвэры
-app.use(express.json());
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: true }));
+
 app.use(cardsRouter);
 app.use(usersRouter);
+
 app.use((req, res, next) => {
   req.user = {
     _id: '64687fa9f53449a18bc708c6',
