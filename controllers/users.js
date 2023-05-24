@@ -47,12 +47,12 @@ module.exports.updateProfile = (req, res) => {
   User.findByIdAndUpdate(userId, { name, about }, { new: true })
     .then((updatedUser) => {
       if (!updatedUser) {
-        return res.status(404).send({ message: 'Пользователь не найден.' });
+        return res.status(404).json({ message: 'Пользователь не найден.' });
       }
-      return res.status(200).send(updatedUser);
+      return res.status(200).json(updatedUser);
     })
     .catch((err) => {
-      res.status(400).send({ message: err });
+      res.status(400).json({ message: err });
     });
 };
 
@@ -64,11 +64,11 @@ module.exports.updateAvatar = (req, res) => {
   User.findByIdAndUpdate(userId, { avatar }, { new: true })
     .then((updatedAvatar) => {
       if (!updatedAvatar) {
-        return res.status(404).send({ message: 'Пользователь не найден.' });
+        return res.status(404).json({ message: 'Пользователь не найден.' });
       }
-      return res.status(200).send(updatedAvatar);
+      return res.status(200).json(updatedAvatar);
     })
     .catch((err) => {
-      res.status(400).send({ message: err });
+      res.status(400).json({ message: err });
     });
 };
