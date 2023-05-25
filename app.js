@@ -1,7 +1,6 @@
 // express, b-p, mongoose
 const express = require('express');
 const mongoose = require('mongoose');
-const bodyParser = require('body-parser');
 // app
 const app = express();
 // роуты
@@ -10,9 +9,7 @@ const usersRouter = require('./routes/users');
 // порт
 const PORT = process.env.PORT || 3000;
 // миддлвэры
-app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({ extended: true }));
-
+app.use(express.json());
 app.use(cardsRouter);
 app.use(usersRouter);
 

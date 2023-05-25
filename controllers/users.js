@@ -4,25 +4,25 @@ const User = require('../models/user');
 module.exports.getUsers = (req, res) => {
   User.find({})
     .then((users) => {
-      res.send({ users });
+      res.send(users);
     })
-    .catch((err) => {
-      res.status(500).send({ message: err });
+    .catch(() => {
+      res.status(500).send({ message: 'Ошибка сервера' });
     });
 };
 
 // получить конкретного пользователя по id
 module.exports.getUserById = (req, res) => {
   const { id } = req.params;
-  User.findById(id)
+  User.find({ _id: id })
     .then((user) => {
       if (!user) {
-        return res.status(404).send({ message: 'Пользователь не найден.' });
+        return res.status(404).send({ message: 'Пользователь не найден' });
       }
-      return res.send({ user });
+      return res.send(user);
     })
-    .catch((err) => {
-      res.status(500).send({ message: err });
+    .catch(() => {
+      res.status(500).send({ message: 'Ошибка сервера' });
     });
 };
 
@@ -31,11 +31,10 @@ module.exports.postUser = (req, res) => {
   const { name, about, avatar } = req.body;
   User.create({ name, about, avatar })
     .then((user) => {
-      res.status(201).send({ user });
-      console.log('Запрос выполнен успешно!');
+      res.status(201).send(user);
     })
-    .catch((err) => {
-      res.status(400).send({ message: err });
+    .catch(() => {
+      res.status(500).send({ message: 'Переданы некорректные данные при создании пользователя' });
     });
 };
 
@@ -47,12 +46,12 @@ module.exports.updateProfile = (req, res) => {
   User.findByIdAndUpdate(userId, { name, about }, { new: true })
     .then((updatedUser) => {
       if (!updatedUser) {
-        return res.status(404).json({ message: 'Пользователь не найден.' });
+        return res.status(404).send({ message: 'Пользователь не найден' });
       }
-      return res.status(200).json(updatedUser);
+      return res.send(updatedUser);
     })
-    .catch((err) => {
-      res.status(400).json({ message: err });
+    .catch(() => {
+      res.status(400).send({ message: 'Переданы некорректные данные' });
     });
 };
 
@@ -64,11 +63,11 @@ module.exports.updateAvatar = (req, res) => {
   User.findByIdAndUpdate(userId, { avatar }, { new: true })
     .then((updatedAvatar) => {
       if (!updatedAvatar) {
-        return res.status(404).json({ message: 'Пользователь не найден.' });
+        return res.status(404).send({ message: 'Пользователь не найден' });
       }
-      return res.status(200).json(updatedAvatar);
+      return res.send(updatedAvatar);
     })
-    .catch((err) => {
-      res.status(400).json({ message: err });
+    .catch(() => {
+      res.status(400).send({ message: 'Переданы некорректные данные' });
     });
 };

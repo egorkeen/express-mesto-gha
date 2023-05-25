@@ -2,12 +2,12 @@ const Card = require('../models/card');
 
 // получить все карточки
 module.exports.getCards = (req, res) => {
-  Card.find()
+  Card.find({})
     .then((cards) => {
-      res.json(cards);
+      res.send(cards);
     })
-    .catch((err) => {
-      res.status(500).send({ message: err });
+    .catch(() => {
+      res.status(500).send({ message: 'Ошибка сервера' });
     });
 };
 
@@ -17,31 +17,30 @@ module.exports.deleteCard = (req, res) => {
   const { cardId } = req.params;
 
   if (!cardId) {
-    return res.status(400).json({ message: 'Некорректный id карточки' });
+    return res.status(400).send({ message: 'Некорректный id карточки' });
   }
 
   Card.findByIdAndRemove(cardId)
     .then((deletedCard) => {
       if (!deletedCard) {
-        return res.status(404).json({ message: 'Карточка не найдена' });
+        return res.status(404).send({ message: 'Карточка не найдена' });
       }
-      return res.status(200).json({ message: 'Карточка успешно удалена' });
+      return res.send({ message: 'Карточка успешно удалена' });
     })
-    .catch((err) => res.status(500).json({ message: err }));
+    .catch(() => res.status(500).send({ message: 'Ошибка сервера' }));
 };
 
 // создать карточку
 module.exports.postCard = (req, res) => {
   const { name, link } = req.body;
-  const userId = req.user;
+  const userId = req.user._id;
 
   Card.create({ name, link, owner: userId })
     .then((createdCard) => {
-      res.status(201).send({ data: createdCard });
-      console.log('Запрос успешно выполен!');
+      res.status(201).send(createdCard);
     })
-    .catch((err) => {
-      res.status(400).send({ message: err });
+    .catch(() => {
+      res.status(400).send({ message: 'Переданы некорректные данные' });
     });
 };
 
@@ -52,7 +51,7 @@ module.exports.likeCard = (req, res) => {
   const { userId } = req.user;
 
   if (!cardId) {
-    return res.status(400).json({ message: 'Некорректный id карточки' });
+    return res.status(400).send({ message: 'Некорректный id карточки' });
   }
 
   Card.findByIdAndUpdate(
@@ -62,11 +61,11 @@ module.exports.likeCard = (req, res) => {
   )
     .then((updatedCard) => {
       if (!updatedCard) {
-        return res.status(404).json({ message: 'Карточка не найдена' });
+        return res.status(404).send({ message: 'Карточка не найдена' });
       }
-      return res.status(200).json({ data: updatedCard });
+      return res.send({ data: updatedCard });
     })
-    .catch((err) => res.status(500).json({ message: err }));
+    .catch(() => res.status(500).send({ message: 'Ошибка сервера' }));
 };
 
 // убрать лайк карточки
@@ -76,7 +75,7 @@ module.exports.dislikeCard = (req, res) => {
   const { userId } = req.user;
 
   if (!cardId) {
-    return res.status(400).json({ message: 'Некорректный id карточки' });
+    return res.status(400).send({ message: 'Некорректный id карточки' });
   }
 
   Card.findByIdAndUpdate(
@@ -86,11 +85,11 @@ module.exports.dislikeCard = (req, res) => {
   )
     .then((updatedCard) => {
       if (!updatedCard) {
-        return res.status(404).json({ message: 'Карточка не найдена' });
+        return res.status(404).send({ message: 'Карточка не найдена' });
       }
-      return res.status(200).json(updatedCard);
+      return res.send(updatedCard);
     })
-    .catch((err) => {
-      res.status(500).json({ message: err.message });
+    .catch(() => {
+      res.status(500).send({ message: 'Ошибка сервера' });
     });
 };
