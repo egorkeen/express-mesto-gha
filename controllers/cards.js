@@ -3,12 +3,11 @@ const Card = require('../models/card');
 // получить все карточки
 module.exports.getCards = (req, res) => {
   Card.find({})
-    .then((cards) => res.send(cards))
+    .then((cards) => res.send({ data: cards }))
     .catch(() => res.status(500).send({ message: 'Ошибка сервера' }));
 };
 
 // удалить карточку
-// eslint-disable-next-line consistent-return
 module.exports.deleteCard = (req, res) => {
   const { cardId } = req.params;
 
@@ -17,7 +16,7 @@ module.exports.deleteCard = (req, res) => {
       if (!deletedCard) {
         return res.status(404).send({ message: 'Карточка не найдена' });
       }
-      return res.send(deletedCard);
+      return res.send({ data: deletedCard });
     })
     .catch((err) => {
       if (err.name === 'CastError') {
@@ -34,7 +33,7 @@ module.exports.postCard = (req, res) => {
 
   Card.create({ name, link, owner })
     .then((createdCard) => {
-      res.status(201).send(createdCard);
+      res.status(201).send({ data: createdCard });
     })
     .catch((err) => {
       if (err.name === 'ValidationError') {
@@ -45,7 +44,6 @@ module.exports.postCard = (req, res) => {
 };
 
 // лайкнуть карточку
-// eslint-disable-next-line consistent-return
 module.exports.likeCard = (req, res) => {
   const { cardId } = req.params;
   const userId = req.user._id;
@@ -89,7 +87,7 @@ module.exports.dislikeCard = (req, res) => {
       if (!updatedCard) {
         return res.status(404).send({ message: 'Карточка не найдена' });
       }
-      return res.send(updatedCard);
+      return res.send({ data: updatedCard });
     })
     .catch((err) => {
       if (err.name === 'CastError') {
