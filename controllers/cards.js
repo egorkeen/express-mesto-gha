@@ -51,17 +51,31 @@ module.exports.likeCard = (req, res) => {
   const userId = req.user._id;
   Card.findByIdAndUpdate(
     cardId,
-    { $addToSet: { likes: userId } },
-    { new: true },
+    {
+      $addToSet:
+      {
+        likes: userId,
+      },
+    },
+    {
+      new: true,
+      runValidators: true,
+    },
   )
     .then((updatedCard) => {
       if (!updatedCard) {
-        res.status(400).send({ message: 'Переданы неверные данные' });
+        res.status(404).send({ message: 'Карточка не найдена' });
         return;
       }
       res.send(updatedCard);
     })
-    .catch((err) => res.status(500).send({ message: 'Ошибка сервера' }));
+    .catch((err) => {
+      if (err.name === 'ValidationError') {
+        res.status(400).send({ message: 'Переданы некорректные' });
+        return;
+      }
+      res.status(500).send({ message: 'Ошибка сервера' })
+    });
 };
 
 // убрать лайк карточки
@@ -76,8 +90,16 @@ module.exports.dislikeCard = (req, res) => {
 
   Card.findByIdAndUpdate(
     cardId,
-    { $pull: { likes: userId } },
-    { new: true },
+    {
+      $addToSet:
+      {
+        likes: userId,
+      },
+    },
+    {
+      new: true,
+      runValidators: true,
+    },
   )
     .then((updatedCard) => {
       if (!updatedCard) {
@@ -86,5 +108,11 @@ module.exports.dislikeCard = (req, res) => {
       }
       res.send(updatedCard);
     })
-    .catch((err) => res.status(500).send({ message: 'Ошибка сервера' }));
+    .catch((err) => {
+      if (err.name === 'ValidationError') {
+        res.status(400).send({ message: 'Переданы некорректные' });
+        return;
+      }
+      res.status(500).send({ message: 'Ошибка сервера' })
+    });
 };
