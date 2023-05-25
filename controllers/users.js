@@ -13,8 +13,8 @@ module.exports.getUsers = (req, res) => {
 
 // получить конкретного пользователя по id
 module.exports.getUserById = (req, res) => {
-  const { id } = req.params;
-  User.find({ _id: id })
+  const { id } = req.user._id;
+  User.findById(id)
     .then((user) => {
       if (!user) {
         return res.status(404).send({ message: 'Пользователь не найден' });
@@ -34,7 +34,7 @@ module.exports.postUser = (req, res) => {
       res.status(201).send(user);
     })
     .catch(() => {
-      res.status(500).send({ message: 'Переданы некорректные данные при создании пользователя' });
+      res.status(400).send({ message: 'Переданы некорректные данные при создании пользователя' });
     });
 };
 
