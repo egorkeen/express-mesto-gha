@@ -59,10 +59,8 @@ module.exports.likeCard = (req, res) => Card.findByIdAndUpdate(
     res.send({ data: card });
   })
   .catch((err) => {
-    if (err.name === 'ValidationError') {
-      res.status(400).send({ message: 'Переданы некорректные данные' });
-    } else if (err.name === 'CastError') {
-      res.status(404).send({ message: 'Запрашиваемая карточка не найдена' });
+    if (err.name === 'CastError') {
+      res.status(400).send({ message: 'Был передан несуществующий id карточки' });
     } else {
       res.status(500).send({ message: 'Ошибка сервера' });
     }
@@ -83,7 +81,7 @@ module.exports.dislikeCard = (req, res) => Card.findByIdAndUpdate(
   })
   .catch((err) => {
     if (err.name === 'CastError') {
-      res.status(404).send({ message: 'Был передан несуществующий id карточки' });
+      res.status(400).send({ message: 'Был передан несуществующий id карточки' });
     } else {
       res.status(500).send({ message: 'Ошибка сервера' });
     }
