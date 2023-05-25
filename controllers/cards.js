@@ -46,66 +46,45 @@ module.exports.postCard = (req, res) => {
 };
 
 // лайкнуть карточку
-module.exports.likeCard = (req, res) => {
-  const { cardId } = req.params;
-  const userId = req.user._id;
-  Card.findByIdAndUpdate(
-    cardId,
-    {
-      $addToSet:
-      {
-        likes: userId,
-      },
-    },
-    {
-      new: true,
-      runValidators: true,
-    },
-  )
-    .then((updatedCard) => {
-      if (!updatedCard) {
-        res.status(400).send({ message: 'Карточка не найдена' });
-        return;
-      }
-      res.send(updatedCard);
-    })
-    .catch((err) => {
-      if (err.name === 'CastError') {
-        res.status(404).send({ message: 'Карточка не найдена' });
-      }
+module.exports.likeCard = (req, res) => Card.findByIdAndUpdate(
+  req.params.cardId,
+  { $addToSet: { likes: req.user._id } },
+  { new: true },
+)
+  .then((card) => {
+    if (!card) {
+      res.status(404).send({ message: 'Запрашиваемая карточка не найдена' });
+      return;
+    }
+    res.send({ data: card });
+  })
+  .catch((err) => {
+    if (err.name === 'ValidationError') {
+      res.status(400).send({ message: 'Переданы некорректные данные' });
+    } else if (err.name === 'CastError') {
+      res.status(404).send({ message: 'Запрашиваемая карточка не найдена' });
+    } else {
       res.status(500).send({ message: 'Ошибка сервера' });
-    });
-};
+    }
+  });
 
 // убрать лайк карточки
-module.exports.dislikeCard = (req, res) => {
-  const { cardId } = req.params;
-  const { userId } = req.user._id;
-
-  Card.findByIdAndUpdate(
-    cardId,
-    {
-      $addToSet:
-      {
-        likes: userId,
-      },
-    },
-    {
-      new: true,
-      runValidators: true,
-    },
-  )
-    .then((updatedCard) => {
-      if (!updatedCard) {
-        res.status(400).send({ message: 'Карточка не найдена' });
-        return;
-      }
-      res.send(updatedCard);
-    })
-    .catch((err) => {
-      if (err.name === 'CastError') {
-        res.status(404).send({ message: 'Карточка не найдена' });
-      }
+module.exports.dislikeCard = (req, res) => Card.findByIdAndUpdate(
+  req.params.cardId,
+  { $pull: { likes: req.user._id } },
+  { new: true },
+)
+  .then((card) => {
+    if (!card) {
+      res.status(404).send({ message: 'Запрашиваемая карточка не найдена' });
+      return;
+    }
+    res.send({ data: card });
+  })
+  .catch((err) => {
+    if (err.name === 'CastError') {
+      res.status(404).send({ message: 'Был передан несуществующий id карточки' });
+    } else {
       res.status(500).send({ message: 'Ошибка сервера' });
-    });
-};
+    }
+  });
