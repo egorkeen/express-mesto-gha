@@ -16,7 +16,7 @@ module.exports.deleteCard = (req, res) => {
       if (!deletedCard) {
         return res.status(404).send({ message: 'Карточка не найдена' });
       }
-      res.send({ data: deletedCard });
+      return res.status(200).send({ data: deletedCard });
     })
     .catch((err) => {
       if (err.name === 'CastError') {
@@ -56,7 +56,7 @@ module.exports.likeCard = (req, res) => {
       if (!updatedCard) {
         return res.status(404).send({ message: 'Карточка не найдена' });
       }
-      res.send({ data: updatedCard });
+      return res.send({ data: updatedCard });
     })
     .catch((err) => {
       if (err.name === 'CastError') {
@@ -87,7 +87,7 @@ module.exports.dislikeCard = (req, res) => {
       if (!updatedCard) {
         return res.status(404).send({ message: 'Карточка не найдена' });
       }
-      res.send({ data: updatedCard });
+      return res.send({ data: updatedCard });
     })
     .catch((err) => {
       if (err.name === 'CastError') {
