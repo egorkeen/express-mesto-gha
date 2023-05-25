@@ -64,16 +64,13 @@ module.exports.likeCard = (req, res) => {
   )
     .then((updatedCard) => {
       if (!updatedCard) {
-        res.status(404).send({ message: 'Карточка не найдена' });
+        res.status(400).send({ message: 'Карточка не найдена' });
         return;
       }
       res.send(updatedCard);
     })
     .catch((err) => {
-      if (err.name === 'ValidationError') {
-        res.status(400).send({ message: 'Переданы некорректные' });
-        return;
-      } if (err.name === 'CastError') {
+      if (err.name === 'CastError') {
         res.status(404).send({ message: 'Карточка не найдена' });
       }
       res.status(500).send({ message: 'Ошибка сервера' });
@@ -100,16 +97,13 @@ module.exports.dislikeCard = (req, res) => {
   )
     .then((updatedCard) => {
       if (!updatedCard) {
-        res.status(404).send({ message: 'Карточка не найдена' });
+        res.status(400).send({ message: 'Карточка не найдена' });
         return;
       }
       res.send(updatedCard);
     })
     .catch((err) => {
-      if (err.name === 'ValidationError') {
-        res.status(400).send({ message: 'Переданы некорректные' });
-        return;
-      } if (err.name === 'CastError') {
+      if (err.name === 'CastError') {
         res.status(404).send({ message: 'Карточка не найдена' });
       }
       res.status(500).send({ message: 'Ошибка сервера' });
