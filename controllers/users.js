@@ -15,7 +15,7 @@ module.exports.getUserById = (req, res) => {
   User.findById(userId)
     .then((user) => {
       if (!user) {
-        return res.status(404).send({ message: 'Пользователь не найден' });
+        res.status(404).send({ message: 'Пользователь не найден' });
       }
       return res.send(user);
     })
@@ -60,9 +60,9 @@ module.exports.updateProfile = (req, res) => {
   )
     .then((updatedUser) => {
       if (!updatedUser) {
-        return res.status(404).send({ message: 'Пользователь не найден' });
+        res.status(404).send({ message: 'Пользователь не найден' });
       }
-      return res.send(updatedUser);
+      res.send(updatedUser);
     })
     .catch((err) => {
       if (err.name === 'CastError') {
@@ -89,9 +89,9 @@ module.exports.updateAvatar = (req, res) => {
   )
     .then((updatedAvatar) => {
       if (!updatedAvatar) {
-        return res.status(404).send({ message: 'Пользователь не найден' });
+        res.status(404).send({ message: 'Пользователь не найден' });
       }
-      return res.send(updatedAvatar);
+      res.send(updatedAvatar);
     })
     .catch((err) => {
       if (err.name === 'CastError') {

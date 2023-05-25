@@ -14,9 +14,9 @@ module.exports.deleteCard = (req, res) => {
   Card.findByIdAndRemove(cardId)
     .then((deletedCard) => {
       if (!deletedCard) {
-        return res.status(404).send({ message: 'Карточка не найдена' });
+        res.status(404).send({ message: 'Карточка не найдена' });
       }
-      return res.status(200).send({ data: deletedCard });
+      res.status(200).send({ data: deletedCard });
     })
     .catch((err) => {
       if (err.name === 'CastError') {
@@ -54,9 +54,9 @@ module.exports.likeCard = (req, res) => {
   )
     .then((updatedCard) => {
       if (!updatedCard) {
-        return res.status(404).send({ message: 'Карточка не найдена' });
+        res.status(404).send({ message: 'Карточка не найдена' });
       }
-      return res.send({ data: updatedCard });
+      res.send({ data: updatedCard });
     })
     .catch((err) => {
       if (err.name === 'CastError') {
@@ -75,7 +75,7 @@ module.exports.dislikeCard = (req, res) => {
   const { userId } = req.user;
 
   if (!cardId) {
-    return res.status(400).send({ message: 'Некорректный id карточки' });
+    res.status(400).send({ message: 'Некорректный id карточки' });
   }
 
   Card.findByIdAndUpdate(
@@ -85,9 +85,9 @@ module.exports.dislikeCard = (req, res) => {
   )
     .then((updatedCard) => {
       if (!updatedCard) {
-        return res.status(404).send({ message: 'Карточка не найдена' });
+        res.status(404).send({ message: 'Карточка не найдена' });
       }
-      return res.send({ data: updatedCard });
+      res.send({ data: updatedCard });
     })
     .catch((err) => {
       if (err.name === 'CastError') {
