@@ -9,7 +9,7 @@ const {
 
 usersRouter.get('/users', getUsers);
 usersRouter.get('/users/:userId', getUserById);
-usersRouter.post('/', postUser);
+usersRouter.post('/users', postUser);
 usersRouter.patch('/users/me', updateProfile);
 usersRouter.patch('/users/me/avatar', updateAvatar);
 

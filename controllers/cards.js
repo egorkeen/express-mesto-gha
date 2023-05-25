@@ -3,8 +3,8 @@ const Card = require('../models/card');
 // получить все карточки
 module.exports.getCards = (req, res) => {
   Card.find({})
-    .then((cards) => res.json(cards))
-    .catch(() => res.status(500).json({ message: 'Ошибка сервера' }));
+    .then((cards) => res.send(cards))
+    .catch(() => res.status(500).send({ message: 'Ошибка сервера' }));
 };
 
 // удалить карточку
@@ -34,14 +34,14 @@ module.exports.postCard = (req, res) => {
 
   Card.create({ name, link, owner })
     .then((createdCard) => {
-      res.status(201).json(createdCard);
+      res.status(201).send(createdCard);
     })
     .catch((err) => {
       if (err.name === 'ValidationError') {
-        res.status(400).json({ message: 'Переданы некорректные данные' });
+        res.status(400).send({ message: 'Переданы некорректные данные' });
         return;
       }
-      res.status(500).json({ message: 'Ошибка сервера' });
+      res.status(500).send({ message: 'Ошибка сервера' });
     });
 };
 
@@ -63,13 +63,13 @@ module.exports.likeCard = (req, res) => {
     })
     .catch((err) => {
       if (err.name === 'CastError') {
-        res.status(404).json({ message: 'Несуществующий id карточки' });
+        res.status(404).send({ message: 'Несуществующий id карточки' });
         return;
       } if (err.name === 'ValidationError') {
-        res.status(400).json({ message: 'Переданы неверные данные' });
+        res.status(400).send({ message: 'Переданы неверные данные' });
         return;
       }
-      res.status(500).json({ message: 'Ошибка сервера' });
+      res.status(500).send({ message: 'Ошибка сервера' });
     });
 };
 
@@ -97,12 +97,12 @@ module.exports.dislikeCard = (req, res) => {
     })
     .catch((err) => {
       if (err.name === 'CastError') {
-        res.status(404).json({ message: 'Несуществующий id карточки' });
+        res.status(404).send({ message: 'Несуществующий id карточки' });
         return;
       } if (err.name === 'ValidationError') {
-        res.status(400).json({ message: 'Переданы неверные данные' });
+        res.status(400).send({ message: 'Переданы неверные данные' });
         return;
       }
-      res.status(500).json({ message: 'Ошибка сервера' });
+      res.status(500).send({ message: 'Ошибка сервера' });
     });
 };
