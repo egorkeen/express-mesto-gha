@@ -3,9 +3,7 @@ const User = require('../models/user');
 // получить список всех пользователей
 module.exports.getUsers = (req, res) => {
   User.find({})
-    .then((users) => {
-      res.send(users);
-    })
+    .then((users) => res.send(users))
     .catch(() => {
       res.status(500).send({ message: 'Ошибка сервера' });
     });
@@ -13,15 +11,18 @@ module.exports.getUsers = (req, res) => {
 
 // получить конкретного пользователя по id
 module.exports.getUserById = (req, res) => {
-  const { id } = req.user._id;
-  User.findById(id)
+  const { userId } = req.params;
+  User.findById(userId)
     .then((user) => {
       if (!user) {
         return res.status(404).send({ message: 'Пользователь не найден' });
       }
       return res.send(user);
     })
-    .catch(() => {
+    .catch((err) => {
+      if (err.name === 'CastError') {
+        res.status(400).send({ message: 'Передан некорректный id пользователя' });
+      }
       res.status(500).send({ message: 'Ошибка сервера' });
     });
 };
@@ -33,41 +34,71 @@ module.exports.postUser = (req, res) => {
     .then((user) => {
       res.status(201).send(user);
     })
-    .catch(() => {
-      res.status(400).send({ message: 'Переданы некорректные данные при создании пользователя' });
+    .catch((err) => {
+      if (err.name === 'ValidationError') {
+        res.status(400).send({ message: 'Переданы некорректные данные при создании пользователя' });
+      }
+      res.status(500).send({ message: 'Ошибка сервера' });
     });
 };
 
 // обновить данные профиля
 module.exports.updateProfile = (req, res) => {
   const { name, about } = req.body;
-  const { userId } = req.user;
+  const userId = req.user._id;
 
-  User.findByIdAndUpdate(userId, { name, about }, { new: true })
+  User.findByIdAndUpdate(
+    userId,
+    {
+      name,
+      about,
+    },
+    {
+      new: true,
+      runValidators: true,
+    },
+  )
     .then((updatedUser) => {
       if (!updatedUser) {
         return res.status(404).send({ message: 'Пользователь не найден' });
       }
       return res.send(updatedUser);
     })
-    .catch(() => {
-      res.status(400).send({ message: 'Переданы некорректные данные' });
+    .catch((err) => {
+      if (err.name === 'CastError') {
+        res.status(400).send({ message: 'Передан некорректный id пользователя' });
+      } else if (err.name === 'ValidationError') {
+        res.status(400).send({ message: 'Переданы некорректные данные для обновления профиля' });
+      }
+      res.status(500).send({ message: 'Ошибка сервера' });
     });
 };
 
 // обновить аватар
 module.exports.updateAvatar = (req, res) => {
   const { avatar } = req.body;
-  const { userId } = req.user;
+  const userId = req.user._id;
 
-  User.findByIdAndUpdate(userId, { avatar }, { new: true })
+  User.findByIdAndUpdate(
+    userId,
+    { avatar },
+    {
+      new: true,
+      runValidators: true,
+    },
+  )
     .then((updatedAvatar) => {
       if (!updatedAvatar) {
         return res.status(404).send({ message: 'Пользователь не найден' });
       }
       return res.send(updatedAvatar);
     })
-    .catch(() => {
-      res.status(400).send({ message: 'Переданы некорректные данные' });
+    .catch((err) => {
+      if (err.name === 'CastError') {
+        res.status(400).send({ message: 'Передан некорректный id пользователя' });
+      } else if (err.name === 'ValidationError') {
+        res.status(400).send({ message: 'Переданы некорректные данные для обновления аватара' });
+      }
+      res.status(500).send({ message: 'Ошибка сервера' });
     });
 };
