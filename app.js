@@ -22,6 +22,9 @@ app.use((req, res, next) => {
 });
 app.use(cardsRouter);
 app.use(usersRouter);
+app.use((req, res) => {
+  res.status(404).send({ message: 'Страница не найдена' });
+});
 // подключение к базе данных
 mongoose.connect('mongodb://127.0.0.1:27017/mestodb');
 // запуск сервера на порту
