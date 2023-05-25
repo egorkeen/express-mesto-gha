@@ -12,8 +12,6 @@ const PORT = process.env.PORT || 3000;
 // миддлвэры
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
-app.use(cardsRouter);
-app.use(usersRouter);
 
 app.use((req, res, next) => {
   req.user = {
@@ -22,8 +20,10 @@ app.use((req, res, next) => {
 
   next();
 });
+app.use(cardsRouter);
+app.use(usersRouter);
 // подключение к базе данных
-mongoose.connect('mongodb://localhost:27017/mestodb');
+mongoose.connect('mongodb://127.0.0.1:27017/mestodb');
 // запуск сервера на порту
 app.listen(PORT, () => {
   console.log(`Сервер запущен на порту ${PORT}`);

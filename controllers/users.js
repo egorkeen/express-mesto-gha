@@ -67,7 +67,7 @@ module.exports.updateProfile = (req, res) => {
         res.status(404).send({ message: 'Пользователь не найден' });
         return;
       }
-      res.send(updatedUser);
+      res.status(200).send(updatedUser);
     })
     .catch((err) => {
       if (err.name === 'CastError') {
