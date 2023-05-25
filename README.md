@@ -1,7 +1,7 @@
 [![Tests](../../actions/workflows/tests-13-sprint.yml/badge.svg)](../../actions/workflows/tests-13-sprint.yml) [![Tests](../../actions/workflows/tests-14-sprint.yml/badge.svg)](../../actions/workflows/tests-14-sprint.yml)
 # Проект Mesto фронтенд + бэкенд
 
-Бэкенд проекта Mesto. В 13-ом спринте реализованы базовые взаимодействия с сервером.
+Бэкенд проекта Mesto. В 13-ом спринте реализованы базовые взаимодействия с сервером. После фронтенд курса, бэкенд дается весьма тяжело.
 
 Ссылка на репозиторий: https://github.com/egorkeen/express-mesto-gha
 
