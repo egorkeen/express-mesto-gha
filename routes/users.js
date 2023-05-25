@@ -7,10 +7,10 @@ const {
   updateAvatar,
 } = require('../controllers/users');
 
-usersRouter.get('/users', getUsers);
-usersRouter.get('/users/:userId', getUserById);
-usersRouter.post('/users', postUser);
-usersRouter.patch('/users/me', updateProfile);
-usersRouter.patch('/users/me/avatar', updateAvatar);
+usersRouter.get('/', getUsers);
+usersRouter.get('/:userId', getUserById);
+usersRouter.post('/', postUser);
+usersRouter.patch('/me', updateProfile);
+usersRouter.patch('/me/avatar', updateAvatar);
 
 module.exports = usersRouter;

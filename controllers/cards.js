@@ -3,26 +3,27 @@ const Card = require('../models/card');
 // получить все карточки
 module.exports.getCards = (req, res) => {
   Card.find({})
-    .then((cards) => res.json({ data: cards }))
+    .then((cards) => res.json(cards))
     .catch(() => res.status(500).json({ message: 'Ошибка сервера' }));
 };
 
 // удалить карточку
 module.exports.deleteCard = (req, res) => {
   const { cardId } = req.params;
-
   Card.findByIdAndRemove(cardId)
     .then((deletedCard) => {
       if (!deletedCard) {
         res.status(404).send({ message: 'Карточка не найдена' });
+        return;
       }
-      res.status(200).send({ data: deletedCard });
+      res.status(200).send(deletedCard);
     })
     .catch((err) => {
       if (err.name === 'CastError') {
-        res.status(400).json({ message: 'Передан неверный id карточки' });
+        res.status(400).send({ message: 'Передан неверный id карточки' });
+        return;
       }
-      res.status(500).json({ message: 'Ошибка сервера' });
+      res.status(500).send({ message: 'Ошибка сервера' });
     });
 };
 
@@ -33,11 +34,12 @@ module.exports.postCard = (req, res) => {
 
   Card.create({ name, link, owner })
     .then((createdCard) => {
-      res.status(201).json({ data: createdCard });
+      res.status(201).json(createdCard);
     })
     .catch((err) => {
       if (err.name === 'ValidationError') {
         res.status(400).json({ message: 'Переданы некорректные данные' });
+        return;
       }
       res.status(500).json({ message: 'Ошибка сервера' });
     });
@@ -55,27 +57,30 @@ module.exports.likeCard = (req, res) => {
     .then((updatedCard) => {
       if (!updatedCard) {
         res.status(404).send({ message: 'Карточка не найдена' });
+        return;
       }
-      res.send({ data: updatedCard });
+      res.send(updatedCard);
     })
     .catch((err) => {
       if (err.name === 'CastError') {
         res.status(404).json({ message: 'Несуществующий id карточки' });
-      } else if (err.name === 'ValidationError') {
+        return;
+      } if (err.name === 'ValidationError') {
         res.status(400).json({ message: 'Переданы неверные данные' });
+        return;
       }
       res.status(500).json({ message: 'Ошибка сервера' });
     });
 };
 
 // убрать лайк карточки
-// eslint-disable-next-line consistent-return
 module.exports.dislikeCard = (req, res) => {
   const { cardId } = req.params;
   const { userId } = req.user;
 
   if (!cardId) {
     res.status(400).send({ message: 'Некорректный id карточки' });
+    return;
   }
 
   Card.findByIdAndUpdate(
@@ -86,14 +91,17 @@ module.exports.dislikeCard = (req, res) => {
     .then((updatedCard) => {
       if (!updatedCard) {
         res.status(404).send({ message: 'Карточка не найдена' });
+        return;
       }
-      res.send({ data: updatedCard });
+      res.send(updatedCard);
     })
     .catch((err) => {
       if (err.name === 'CastError') {
         res.status(404).json({ message: 'Несуществующий id карточки' });
-      } else if (err.name === 'ValidationError') {
+        return;
+      } if (err.name === 'ValidationError') {
         res.status(400).json({ message: 'Переданы неверные данные' });
+        return;
       }
       res.status(500).json({ message: 'Ошибка сервера' });
     });
