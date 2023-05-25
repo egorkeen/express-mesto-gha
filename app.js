@@ -8,9 +8,10 @@ const app = express();
 const cardsRouter = require('./routes/cards');
 const usersRouter = require('./routes/users');
 // порт
-const PORT = process.env.PORT || 3000;
+const PORT = process.env || 3000;
 // миддлвэры
 app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: true }));
 app.use(cardsRouter);
 app.use(usersRouter);
 
@@ -22,7 +23,7 @@ app.use((req, res, next) => {
   next();
 });
 // подключение к базе данных
-mongoose.connect('mongodb://127.0.0.1:27017/mestodb');
+mongoose.connect('mongodb://localhost:27017/mestodb');
 // запуск сервера на порту
 app.listen(PORT, () => {
   console.log(`Сервер запущен на порту ${PORT}`);
