@@ -56,7 +56,7 @@ module.exports.likeCard = (req, res) => Card.findByIdAndUpdate(
       res.status(404).send({ message: 'Запрашиваемая карточка не найдена' });
       return;
     }
-    res.send({ data: card });
+    res.send(card);
   })
   .catch((err) => {
     if (err.name === 'CastError') {
@@ -77,7 +77,7 @@ module.exports.dislikeCard = (req, res) => Card.findByIdAndUpdate(
       res.status(404).send({ message: 'Запрашиваемая карточка не найдена' });
       return;
     }
-    res.send({ data: card });
+    res.send(card);
   })
   .catch((err) => {
     if (err.name === 'CastError') {
