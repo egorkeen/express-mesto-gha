@@ -1,7 +1,7 @@
 // express, b-p, mongoose
 const express = require('express');
 const mongoose = require('mongoose');
-const errors = require('celebrate');
+const { errors } = require('celebrate');
 const bodyParser = require('body-parser');
 const { login, postUser } = require('./controllers/users');
 const auth = require('./middlewares/auth');
