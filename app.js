@@ -2,6 +2,9 @@
 const express = require('express');
 const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
+const { login, postUser } = require('./controllers/users');
+const { auth } = require('./middlewares/auth');
+const handleError = require('./middlewares/handle-error');
 // app
 const app = express();
 // роуты
@@ -13,18 +16,16 @@ const PORT = process.env.PORT || 3000;
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
-app.use((req, res, next) => {
-  req.user = {
-    _id: '64687fa9f53449a18bc708c6',
-  };
-
-  next();
-});
 app.use(cardsRouter);
 app.use(usersRouter);
+app.use(auth);
 app.use((req, res) => {
   res.status(404).send({ message: 'Страница не найдена' });
 });
+app.use(handleError);
+
+app.post('/signin', login);
+app.post('/signup', postUser);
 // подключение к базе данных
 mongoose.connect('mongodb://127.0.0.1:27017/mestodb');
 // запуск сервера на порту
