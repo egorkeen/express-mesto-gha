@@ -1,6 +1,7 @@
 // express, b-p, mongoose
 const express = require('express');
 const mongoose = require('mongoose');
+const errors = require('celebrate');
 const bodyParser = require('body-parser');
 const { login, postUser } = require('./controllers/users');
 const auth = require('./middlewares/auth');
@@ -22,6 +23,7 @@ app.use(auth);
 app.use((req, res) => {
   res.status(404).send({ message: 'Страница не найдена' });
 });
+app.use(errors());
 app.use(handleError);
 
 app.post('/signin', login);
