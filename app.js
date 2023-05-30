@@ -3,7 +3,7 @@ const express = require('express');
 const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
 const { login, postUser } = require('./controllers/users');
-const { auth } = require('./middlewares/auth');
+const auth = require('./middlewares/auth');
 const handleError = require('./middlewares/handle-error');
 // app
 const app = express();
