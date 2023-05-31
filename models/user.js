@@ -4,6 +4,23 @@ const bcrypt = require('bcryptjs');
 
 // схема пользователя
 const userSchema = mongoose.Schema({
+  // e-mail
+  email: {
+    type: String,
+    required: true,
+    unique: true,
+    validate: {
+      validator: validator.isEmail,
+      message: 'Некорректный e-mail адрес',
+    },
+  },
+  // пароль
+  password: {
+    type: String,
+    minLength: 8,
+    required: true,
+    select: false,
+  },
   // имя
   name: {
     type: String,
@@ -23,23 +40,6 @@ const userSchema = mongoose.Schema({
     type: String,
     default: 'https://pictures.s3.yandex.net/resources/jacques-cousteau_1604399756.png',
     validate: /^https?:\/\/(www\.)?[a-zA-Z0-9-._~:/?#[\]@!$&'()*+,;=]+#?$/,
-  },
-  // e-mail
-  email: {
-    type: String,
-    required: true,
-    unique: true,
-    validate: {
-      validator: validator.isEmail,
-      message: 'Некорректный e-mail адрес',
-    },
-  },
-  // пароль
-  password: {
-    type: String,
-    minLength: 8,
-    required: true,
-    select: false,
   },
 });
 
