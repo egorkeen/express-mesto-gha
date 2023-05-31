@@ -89,12 +89,13 @@ module.exports.postUser = (req, res, next) => {
           });
         })
         .catch((err) => {
-          if (err.name === 'MongoServerError' || err.code === 11000) {
-            throw new ConflictError('Пользователь с такой почтой уже существует');
+          if (err.code === 11000) {
+            next(new ConflictError('Пользователь с такой почтой уже существует'));
           } else if (err.name === 'ValidationError') {
-            throw new InaccurateDataError('Переданы некорректные данные при создании пользователя');
+            next(new InaccurateDataError('Переданы некорректные данные при создании пользователя'));
+          } else {
+            next(err);
           }
-          next(err);
         });
     })
     .catch(next);
