@@ -96,7 +96,8 @@ module.exports.postUser = (req, res, next) => {
           }
           next(err);
         });
-    });
+    })
+    .catch(next);
 };
 
 // обновить данные профиля
