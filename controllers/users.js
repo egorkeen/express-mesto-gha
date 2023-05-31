@@ -4,6 +4,7 @@ const User = require('../models/user');
 const NotFoundError = require('../errors/NotFoundError');
 const InaccurateDataError = require('../errors/InaccurateDataError');
 const AuthorizeError = require('../errors/AuthorizeError');
+const ConflictError = require('../errors/ConflictError');
 
 // войти в аккаунт (логин)
 module.exports.login = (req, res) => {
@@ -80,11 +81,18 @@ module.exports.postUser = (req, res, next) => {
         },
       )
         .then((user) => {
-          res.send(user);
+          res.status(201).send({
+            name: user.name,
+            about: user.about,
+            avatar: user.avatar,
+            email: user.email,
+          });
         })
         .catch((err) => {
           if (err.name === 'ValidationError') {
             throw new InaccurateDataError('Переданы некорректные данные при создании пользователя');
+          } else if (err.name === 'MongoServerError') {
+            throw new ConflictError('Пользователь с такой почтой уже существует');
           }
           next(err);
         });
