@@ -7,22 +7,24 @@ const AuthorizeError = require('../errors/AuthorizeError');
 const ConflictError = require('../errors/ConflictError');
 
 // войти в аккаунт (логин)
-module.exports.login = (req, res) => {
+module.exports.login = (req, res, next) => {
   const { email, password } = req.body;
 
   return User.findUserByCredentials(email, password)
     .then((user) => {
-      const token = jwt.sign(
-        { _id: user._id },
-        'some-secret-key',
-        { expiresIn: '7d' },
-      );
+      if (user) {
+        const token = jwt.sign(
+          { _id: user._id },
+          'some-secret-key',
+          { expiresIn: '7d' },
+        );
 
-      res.status(201).send({ token });
+        res.status(201).send({ token });
+      } else {
+        throw new AuthorizeError('Неверный логин или пароль');
+      }
     })
-    .catch(() => {
-      throw new AuthorizeError('Неверный логин или пароль');
-    });
+    .catch(next);
 };
 
 // получить список всех пользователей
@@ -90,9 +92,9 @@ module.exports.postUser = (req, res, next) => {
         })
         .catch((err) => {
           if (err.code === 11000) {
-            next(new ConflictError('Пользователь с такой почтой уже существует'));
+            throw new ConflictError('Пользователь с такой почтой уже существует');
           } else if (err.name === 'ValidationError') {
-            next(new InaccurateDataError('Переданы некорректные данные при создании пользователя'));
+            throw new InaccurateDataError('Переданы некорректные данные при создании пользователя');
           } else {
             next(err);
           }
