@@ -17,7 +17,7 @@ module.exports.login = (req, res) => {
         { expiresIn: '7d' },
       );
 
-      res.send({ token });
+      res.status(201).send({ token });
     })
     .catch(() => {
       throw new AuthorizeError('Неверный логин или пароль');
@@ -80,9 +80,7 @@ module.exports.postUser = (req, res, next) => {
         },
       )
         .then((user) => {
-          res
-            .status(201)
-            .send(user);
+          res.send(user);
         })
         .catch((err) => {
           if (err.name === 'ValidationError') {
