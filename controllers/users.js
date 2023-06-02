@@ -21,9 +21,10 @@ module.exports.login = (req, res, next) => {
 
         return res.send({ _id: token });
       }
-      throw new AuthorizeError('Неверные почта или пароль');
     })
-    .catch(next);
+    .catch(() => {
+      next(new AuthorizeError('Неверные почта или пароль'));
+    });
 };
 
 // получить список всех пользователей
