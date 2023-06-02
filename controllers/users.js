@@ -36,11 +36,11 @@ module.exports.getUsers = (req, res, next) => {
 
 // получить информацию о пользователе
 module.exports.getUserInfo = (req, res, next) => {
-  const {userId} = req.user;
-  User.findById(userId)
+  console.log(req.user._id);
+  User.findById(req.user._id)
     .then((user) => {
       if (!user) {
-        throw new NotFoundError(`Пользователь ${userId} не найден`);
+        throw new NotFoundError(`Пользователь ${req.user._id} не найден`);
       }
       res.send({
         name: user.name,
