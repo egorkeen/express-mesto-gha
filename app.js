@@ -1,39 +1,41 @@
-// импортируем все необходимое
-// express, b-p, mongoose
+// загрузить базовые импорты
 const express = require('express');
 const mongoose = require('mongoose');
 const { errors } = require('celebrate');
 const bodyParser = require('body-parser');
-const handleError = require('./middlewares/handle-error');
-// app
-const app = express();
-// роуты
-const cardsRouter = require('./routes/cards');
-const usersRouter = require('./routes/users');
-const loginRouter = require('./routes/sign-in');
-const registerRouter = require('./routes/sign-up');
 
-// создаем порт
-const PORT = process.env.PORT || 3000;
-// миддлвэр
+// создать приложение
+const app = express();
+
+// загрузить роут
+const routes = require('./routes');
+
+// загрузить центральный обработчик ошибок
+const handleErrors = require('./middlewares/handleErrors');
+
+// создать порт
+const { PORT = 3000 } = process.env;
+
+// использовать middlewares
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
-// используем все роуты
-app.use(cardsRouter);
-app.use(usersRouter);
-app.use(loginRouter);
-app.use(registerRouter);
-// создаем миддлуэр на случай несуществующей страницы
+
+// использовать роут
+app.use(routes);
+
+// создать middleware для несуществующих страниц
 app.use((req, res) => {
   res.status(404).send({ message: 'Страница не найдена' });
 });
-// отслеживаем ошибки
-app.use(errors());
-app.use(handleError);
 
-// подключение к базе данных
+// подключить отслеживание ошибок
+app.use(errors());
+app.use(handleErrors);
+
+// подключиться к базе данных
 mongoose.connect('mongodb://127.0.0.1:27017/mestodb');
-// запуск сервера на порту
+
+// запустить сервер
 app.listen(PORT, () => {
   console.log(`Сервер запущен на порту ${PORT}`);
 });

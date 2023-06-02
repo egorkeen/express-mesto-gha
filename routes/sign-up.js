@@ -1,7 +1,9 @@
-const registerRouter = require('express').Router();
-const { postUser } = require('../controllers/users');
-const { celebrateSignUp } = require('../middlewares/celebrate');
+const SignUpRouter = require('express').Router();
 
-registerRouter.post('/signup', celebrateSignUp, postUser);
+const { createUser } = require('../controllers/users');
 
-module.exports = registerRouter;
+const { celebrateCreateUser } = require('../middlewares/celebrate');
+
+SignUpRouter.post('/signup', celebrateCreateUser, createUser);
+
+module.exports = SignUpRouter;

@@ -1,23 +1,26 @@
-const usersRouter = require('express').Router();
+const userRouter = require('express').Router();
+
 const {
   getUsers,
-  getUserInfo,
+  getCurrentUser,
   getUserById,
-  updateProfile,
-  updateAvatar,
+  updateUserProfile,
+  updateUserAvatar,
 } = require('../controllers/users');
-const auth = require('../middlewares/auth');
+
 const {
   celebrateGetUserById,
-  celebrateUpdateProfile,
-  celebrateUpdateAvatar,
+  celebrateUpdateUserProfile,
+  celebrateUpdateUserAvatar,
 } = require('../middlewares/celebrate');
 
-usersRouter.get('/users', getUsers);
-usersRouter.get('/users/me', getUserInfo);
-usersRouter.get('/users/:userId', celebrateGetUserById, getUserById);
-usersRouter.patch('/users/me', celebrateUpdateProfile, updateProfile);
-usersRouter.patch('/users/me/avatar', celebrateUpdateAvatar, updateAvatar);
-usersRouter.use(auth);
+const { auth } = require('../middlewares/auth');
 
-module.exports = usersRouter;
+userRouter.get('/users', getUsers);
+userRouter.get('/users/me', getCurrentUser);
+userRouter.get('/users/:userId', celebrateGetUserById, getUserById);
+userRouter.patch('/users/me', celebrateUpdateUserProfile, updateUserProfile);
+userRouter.patch('/users/me/avatar', celebrateUpdateUserAvatar, updateUserAvatar);
+userRouter.use(auth);
+
+module.exports = userRouter;
