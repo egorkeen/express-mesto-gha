@@ -19,10 +19,9 @@ module.exports.login = (req, res, next) => {
           { expiresIn: '7d' },
         );
 
-        res.status(201).send({ token });
-      } else {
-        throw new AuthorizeError('Неверный логин или пароль');
+        return res.send({ token });
       }
+      throw new AuthorizeError('Неверный логин или пароль');
     })
     .catch(next);
 };
@@ -35,12 +34,21 @@ module.exports.getUsers = (req, res, next) => {
 };
 
 // получить информацию о пользователе
-module.exports.getUser = (req, res, next) => {
-  User.findById(req.user.payload)
+module.exports.getUserInfo = (req, res, next) => {
+  User.findById(req.user.userId)
     .then((user) => {
+      if (!user) {
+        throw new NotFoundError('Пользователь не найден');
+      }
       res.send(user);
     })
-    .catch(next);
+    .catch((err) => {
+      if (err.name === 'CastError') {
+        next(new InaccurateDataError('Передан некоррекнтый id пользователя'));
+      } else {
+        next(err);
+      }
+    });
 };
 
 // получить конкретного пользователя по id
