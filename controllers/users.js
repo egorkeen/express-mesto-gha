@@ -92,15 +92,14 @@ module.exports.postUser = (req, res, next) => {
         })
         .catch((err) => {
           if (err.code === 11000) {
-            throw new ConflictError('Пользователь с такой почтой уже существует');
+            next(new ConflictError('Пользователь с такой почтой уже существует'));
           } else if (err.name === 'ValidationError') {
-            throw new InaccurateDataError('Переданы некорректные данные при создании пользователя');
+            next(new InaccurateDataError('Переданы некорректные данные при создании пользователя'));
           } else {
             next(err);
           }
         });
-    })
-    .catch(next);
+    });
 };
 
 // обновить данные профиля
