@@ -40,7 +40,7 @@ module.exports.getUserInfo = (req, res, next) => {
   User.findById(userId)
     .then((user) => {
       if (!user) {
-        throw new NotFoundError('Пользователь не найден');
+        throw new NotFoundError(`Пользователь ${userId} не найден`);
       }
       res.send({
         name: user.name,
@@ -135,9 +135,9 @@ module.exports.updateProfile = (req, res, next) => {
     })
     .catch((err) => {
       if (err.name === 'CastError') {
-        throw new InaccurateDataError('Передан некорректный id пользователя');
+        next(new InaccurateDataError('Передан некорректный id пользователя'));
       } if (err.name === 'ValidationError') {
-        throw new InaccurateDataError('Переданы некорректные данные для обновления профиля');
+        next(new InaccurateDataError('Переданы некорректные данные для обновления профиля'));
       }
       next(err);
     });
@@ -164,9 +164,9 @@ module.exports.updateAvatar = (req, res, next) => {
     })
     .catch((err) => {
       if (err.name === 'CastError') {
-        throw new InaccurateDataError('Передан некорректный id пользователя');
+        next(new InaccurateDataError('Передан некорректный id пользователя'));
       } if (err.name === 'ValidationError') {
-        throw new InaccurateDataError('Переданы некорректные данные для обновления аватара');
+        next(new InaccurateDataError('Переданы некорректные данные для обновления аватара'));
       }
       next(err);
     });
