@@ -14,12 +14,11 @@ module.exports.login = (req, res, next) => {
     .then((user) => {
       if (user) {
         const token = jwt.sign(
-          { _id: user.userId },
+          { _id: user._id },
           'some-secret-key',
           { expiresIn: '7d' },
         );
-
-        res.send({ _id: token });
+        res.send({ token });
       }
     })
     .catch(() => {
@@ -36,13 +35,13 @@ module.exports.getUsers = (req, res, next) => {
 
 // получить информацию о пользователе
 module.exports.getUserInfo = (req, res, next) => {
-  console.log(req.user._id);
-  User.findById(req.user._id)
+  const { _id } = req.user._id;
+  User.find({ _id })
     .then((user) => {
       if (!user) {
-        throw new NotFoundError(`Пользователь ${req.user._id} не найден`);
+        throw new NotFoundError('Пользователь не найден');
       }
-      res.send({
+      return res.send({
         name: user.name,
         about: user.about,
         avatar: user.avatar,

@@ -13,7 +13,7 @@ module.exports.getCards = (req, res, next) => {
 // удалить карточку
 module.exports.deleteCard = (req, res, next) => {
   const { cardId } = req.params;
-  const userId = req.user.id;
+  const userId = req.user._id;
 
   Card.findById(cardId)
     .then((card) => {

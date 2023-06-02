@@ -4,7 +4,6 @@ const express = require('express');
 const mongoose = require('mongoose');
 const { errors } = require('celebrate');
 const bodyParser = require('body-parser');
-const auth = require('./middlewares/auth');
 const handleError = require('./middlewares/handle-error');
 // app
 const app = express();
@@ -16,7 +15,7 @@ const registerRouter = require('./routes/sign-up');
 
 // создаем порт
 const PORT = process.env.PORT || 3000;
-// миддлвэры
+// миддлвэр
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 // используем все роуты
@@ -24,8 +23,6 @@ app.use(cardsRouter);
 app.use(usersRouter);
 app.use(loginRouter);
 app.use(registerRouter);
-// задействуем авторизацию
-app.use(auth);
 // создаем миддлуэр на случай несуществующей страницы
 app.use((req, res) => {
   res.status(404).send({ message: 'Страница не найдена' });
