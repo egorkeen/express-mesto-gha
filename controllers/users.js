@@ -36,21 +36,12 @@ module.exports.getUsers = (req, res, next) => {
 
 // получить информацию о пользователе
 module.exports.getUserInfo = (req, res, next) => {
-  const userId = req.params.userId ? req.params.userId : req.user._id;
+  const userId = req.user._id;
   User.findById(userId)
     .then((user) => {
-      if (!user) {
-        throw new NotFoundError('Пользователь не найден');
-      }
       res.send(user);
     })
-    .catch((err) => {
-      if (err.name === 'CastError') {
-        next(new InaccurateDataError('Передан некоррекнтый id пользователя'));
-      } else {
-        next(err);
-      }
-    });
+    .catch(next);
 };
 
 // получить конкретного пользователя по id
@@ -65,7 +56,7 @@ module.exports.getUserById = (req, res, next) => {
     })
     .catch((err) => {
       if (err.name === 'CastError') {
-        throw new InaccurateDataError('Передан некорректный id пользователя');
+        next(new InaccurateDataError('Передан некорректный id пользователя'));
       }
       next(err);
     });
