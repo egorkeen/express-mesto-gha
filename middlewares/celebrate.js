@@ -1,8 +1,9 @@
 const { celebrate, Joi } = require('celebrate');
+const JoiObjectId = require('joi-objectid')(Joi);
 
 module.exports.celebrateGetUserById = celebrate({
   params: Joi.object().keys({
-    userId: Joi.objectId(),
+    userId: JoiObjectId().required(),
   }),
 });
 
