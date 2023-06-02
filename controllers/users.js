@@ -47,7 +47,7 @@ module.exports.createUser = (req, res, next) => {
       },
     ))
     .then((user) => {
-      res.send({
+      res.status(201).send({
         name: user.name,
         about: user.about,
         avatar: user.avatar,
@@ -84,7 +84,12 @@ module.exports.getUserById = (req, res, next) => {
         throw new NotFoundError('Пользователь с данным id не найден');
       }
 
-      return res.send(user);
+      return res.send({
+        name: user.name,
+        about: user.about,
+        avatar: user.avatar,
+        email: user.email,
+      });
     })
     .catch((err) => {
       if (err.name === 'CastError') {
@@ -105,7 +110,12 @@ module.exports.getCurrentUser = (req, res, next) => {
         throw new NotFoundError('Пользователь с данным id не найден');
       }
 
-      return res.send(user);
+      return res.send({
+        name: user.name,
+        about: user.about,
+        avatar: user.avatar,
+        email: user.email,
+      });
     })
     .catch((err) => {
       if (err.name === 'CastError') {
@@ -123,7 +133,10 @@ module.exports.updateUserProfile = (req, res, next) => {
 
   User.findByIdAndUpdate(
     userId,
-    { name, about },
+    {
+      name,
+      about,
+    },
     {
       new: true,
       runValidators: true,
@@ -133,10 +146,17 @@ module.exports.updateUserProfile = (req, res, next) => {
       if (!user) {
         throw new NotFoundError('Пользователь с данным id не найден');
       }
-      return res.send(user);
+      return res.send({
+        name: user.name,
+        about: user.about,
+        avatar: user.avatar,
+        email: user.email,
+      });
     })
     .catch((err) => {
-      if (err.name === 'ValidationError') {
+      if (err.name === 'CastError') {
+        next(new InaccurateDataError('Передан некорректный id пользователя'));
+      } else if (err.name === 'ValidationError') {
         next(new InaccurateDataError('Переданы некорректные данные'));
       } else {
         next(err);
@@ -151,7 +171,9 @@ module.exports.updateUserAvatar = (req, res, next) => {
 
   User.findByIdAndUpdate(
     userId,
-    { avatar },
+    {
+      avatar,
+    },
     {
       new: true,
       runValidators: true,
@@ -161,10 +183,17 @@ module.exports.updateUserAvatar = (req, res, next) => {
       if (!user) {
         throw new NotFoundError('Пользователь с данным id не найден');
       }
-      return res.send(user);
+      return res.send({
+        name: user.name,
+        about: user.about,
+        avatar: user.avatar,
+        email: user.email,
+      });
     })
     .catch((err) => {
-      if (err.name === 'ValidationError') {
+      if (err.name === 'CastError') {
+        next(new InaccurateDataError('Передан некорректный id пользователя'));
+      } else if (err.name === 'ValidationError') {
         next(new InaccurateDataError('Переданы некорректные данные'));
       } else {
         next(err);
