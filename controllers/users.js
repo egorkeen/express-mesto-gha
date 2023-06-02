@@ -36,12 +36,12 @@ module.exports.getUsers = (req, res, next) => {
 
 // получить информацию о пользователе
 module.exports.getUserInfo = (req, res, next) => {
-  User.findById(req.user.userId)
+  User.findById(req.user._id)
     .then((user) => {
-      if (user) {
-        return res.send(user);
+      if (!user) {
+        throw new NotFoundError('Пользователь не найден');
       }
-      throw new NotFoundError('Пользователь не найден');
+      res.send(user);
     })
     .catch((err) => {
       if (err.name === 'CastError') {
