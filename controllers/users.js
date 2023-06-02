@@ -19,7 +19,7 @@ module.exports.login = (req, res, next) => {
           { expiresIn: '7d' },
         );
 
-        return res.send({ _id: token });
+        res.send({ _id: token });
       }
     })
     .catch(() => {
