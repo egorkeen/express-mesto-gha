@@ -13,10 +13,11 @@ const {
   celebrateUpdateAvatar,
 } = require('../middlewares/celebrate');
 
-usersRouter.get('/users', auth, getUsers);
-usersRouter.get('/users/me', auth, getUserInfo);
+usersRouter.get('/users', getUsers);
+usersRouter.get('/users/me', getUserInfo);
 usersRouter.get('/users/:userId', celebrateGetUserById, getUserById);
 usersRouter.patch('/users/me', celebrateUpdateProfile, updateProfile);
 usersRouter.patch('/users/me/avatar', celebrateUpdateAvatar, updateAvatar);
+usersRouter.use(auth);
 
 module.exports = usersRouter;
