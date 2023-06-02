@@ -36,7 +36,7 @@ module.exports.getUsers = (req, res, next) => {
 
 // получить информацию о пользователе
 module.exports.getUserInfo = (req, res, next) => {
-  const userId = req.user._id ? req.user._id : req.params.userId;
+  const {userId} = req.user;
   User.findById(userId)
     .then((user) => {
       if (!user) {
