@@ -14,14 +14,14 @@ module.exports.login = (req, res, next) => {
     .then((user) => {
       if (user) {
         const token = jwt.sign(
-          { _id: user._id },
+          { _id: user.userId },
           'some-secret-key',
           { expiresIn: '7d' },
         );
 
-        return res.send({ token });
+        return res.send({ _id: token });
       }
-      throw new AuthorizeError('Неверный логин или пароль');
+      throw new AuthorizeError('Неверные почта или пароль');
     })
     .catch(next);
 };
@@ -37,10 +37,10 @@ module.exports.getUsers = (req, res, next) => {
 module.exports.getUserInfo = (req, res, next) => {
   User.findById(req.user.userId)
     .then((user) => {
-      if (!user) {
-        throw new NotFoundError('Пользователь не найден');
+      if (user) {
+        return res.send(user);
       }
-      res.send(user);
+      throw new NotFoundError('Пользователь не найден');
     })
     .catch((err) => {
       if (err.name === 'CastError') {
