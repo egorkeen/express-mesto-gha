@@ -35,8 +35,8 @@ module.exports.getUsers = (req, res, next) => {
 
 // получить информацию о пользователе
 module.exports.getUserInfo = (req, res, next) => {
-  const { _id } = req.user._id;
-  User.findById(_id)
+  const userId = req.user._id;
+  User.findById(userId)
     .then((user) => {
       if (!user) {
         throw new NotFoundError('Пользователь не найден');
@@ -130,7 +130,7 @@ module.exports.updateProfile = (req, res, next) => {
       if (!updatedUser) {
         throw new NotFoundError('Пользователь не найден');
       }
-      res.status(200).send(updatedUser);
+      res.send(updatedUser);
     })
     .catch((err) => {
       if (err.name === 'CastError') {
