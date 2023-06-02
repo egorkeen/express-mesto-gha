@@ -16,11 +16,11 @@ const {
 
 const { auth } = require('../middlewares/auth');
 
+userRouter.use(auth);
 userRouter.get('/users', getUsers);
 userRouter.get('/users/me', getCurrentUser);
 userRouter.get('/users/:userId', celebrateGetUserById, getUserById);
 userRouter.patch('/users/me', celebrateUpdateUserProfile, updateUserProfile);
 userRouter.patch('/users/me/avatar', celebrateUpdateUserAvatar, updateUserAvatar);
-userRouter.use(auth);
 
 module.exports = userRouter;

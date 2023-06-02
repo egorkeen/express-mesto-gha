@@ -11,11 +11,11 @@ const {
 } = require('../middlewares/celebrate');
 const { auth } = require('../middlewares/auth');
 
+CardRouter.use(auth);
 CardRouter.get('/cards', getCards);
 CardRouter.post('/cards', celebrateCreateCard, createCard);
 CardRouter.delete('/cards/:cardId', deleteCard);
 CardRouter.put('/cards/:cardId/likes', likeCard);
 CardRouter.delete('/cards/:cardId/likes', dislikeCard);
-CardRouter.use(auth);
 
 module.exports = CardRouter;
