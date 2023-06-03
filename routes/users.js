@@ -8,16 +8,12 @@ const {
   updateUserAvatar,
 } = require('../controllers/users');
 
-const {
-  celebrateGetUserById,
-  celebrateUpdateUserProfile,
-  celebrateUpdateUserAvatar,
-} = require('../middlewares/celebrate');
+const celebrate = require('../middlewares/celebrate');
 
 userRouter.get('/users', getUsers);
 userRouter.get('/users/me', getCurrentUser);
-userRouter.get('/users/:userId', celebrateGetUserById, getUserById);
-userRouter.patch('/users/me', celebrateUpdateUserProfile, updateUserProfile);
-userRouter.patch('/users/me/avatar', celebrateUpdateUserAvatar, updateUserAvatar);
+userRouter.get('/users/:userId', celebrate.celebrateGetUserById, getUserById);
+userRouter.patch('/users/me', celebrate.celebrateUpdateUserProfile, updateUserProfile);
+userRouter.patch('/users/me/avatar', celebrate.celebrateUpdateUserAvatar, updateUserAvatar);
 
 module.exports = userRouter;

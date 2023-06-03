@@ -1,9 +1,9 @@
-const SignInRouter = require('express').Router();
+const signInRouter = require('express').Router();
 
 const { login } = require('../controllers/users');
 
-const { celebrateLogin } = require('../middlewares/celebrate');
+const celebrate = require('../middlewares/celebrate');
 
-SignInRouter.post('/signin', celebrateLogin, login);
+signInRouter.post('/signin', celebrate.celebrateLogin, login);
 
-module.exports = SignInRouter;
+module.exports = signInRouter;
