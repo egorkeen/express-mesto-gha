@@ -43,3 +43,9 @@ module.exports.celebrateCreateCard = celebrate({
     link: Joi.string().required().regex(/^https?:\/\/([\w_-]+(?:(?:\.[\w_-]+)+))([\w.,@?^=%&:\\/~+#-]*[\w@?^=%&\\/~+#-])/im),
   }),
 });
+
+module.exports.celebrateDeleteCard = celebrate({
+  params: Joi.object().keys({
+    cardId: Joi.string().hex().length(24),
+  }),
+});

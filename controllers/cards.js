@@ -74,7 +74,7 @@ module.exports.likeCard = (req, res, next) => {
   )
     .then((card) => {
       if (!card) {
-        throw new NotFoundError('Карточка с данным id не найдена');
+        throw new InaccurateDataError('Переданы некорректные данные карточки');
       }
 
       return res.send(card);
@@ -104,7 +104,7 @@ module.exports.dislikeCard = (req, res, next) => {
   )
     .then((card) => {
       if (!card) {
-        throw new NotFoundError('Карточка с данным id не найдена');
+        throw new InaccurateDataError('Переданы некорректные данные карточки');
       }
 
       return res.send(card);
