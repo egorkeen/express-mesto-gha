@@ -71,7 +71,10 @@ module.exports.getUsers = (req, res, next) => {
     .then((users) => {
       res.send(users);
     })
-    .catch(next);
+    .catch((err) => {
+      console.log(err);
+      next(err);
+    });
 };
 
 // получить данные пользователя по id
