@@ -11,7 +11,7 @@ const app = express();
 const routes = require('./routes');
 
 // загрузить центральный обработчик ошибок
-const handleErrors = require('./middlewares/handleErrors');
+const { handleErrors } = require('./middlewares/handleErrors');
 
 // создать порт
 const { PORT = 3000 } = process.env;
