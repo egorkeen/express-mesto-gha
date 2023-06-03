@@ -1,6 +1,4 @@
-// импортировать всё необходимое
 const mongoose = require('mongoose');
-
 // схема карточки
 const cardSchema = mongoose.Schema({
   // имя

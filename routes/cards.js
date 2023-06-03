@@ -1,4 +1,4 @@
-const CardRouter = require('express').Router();
+const cardRouter = require('express').Router();
 const {
   getCards,
   createCard,
@@ -10,10 +10,10 @@ const {
   celebrateCreateCard,
 } = require('../middlewares/celebrate');
 
-CardRouter.get('/cards', getCards);
-CardRouter.post('/cards', celebrateCreateCard, createCard);
-CardRouter.delete('/cards/:cardId', deleteCard);
-CardRouter.put('/cards/:cardId/likes', likeCard);
-CardRouter.delete('/cards/:cardId/likes', dislikeCard);
+cardRouter.get('/cards', getCards);
+cardRouter.post('/cards', celebrateCreateCard, createCard);
+cardRouter.delete('/cards/:cardId', deleteCard);
+cardRouter.put('/cards/:cardId/likes', likeCard);
+cardRouter.delete('/cards/:cardId/likes', dislikeCard);
 
-module.exports = CardRouter;
+module.exports = cardRouter;
