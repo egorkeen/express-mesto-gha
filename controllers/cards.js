@@ -50,11 +50,17 @@ module.exports.deleteCard = (req, res, next) => {
         throw new NoRightsError('Нет прав для удаления карточки');
       }
 
-      Card.findByIdAndRemove(cardId)
+      return Card.findByIdAndRemove(cardId)
         .then((deletedCard) => {
           res.send(deletedCard);
         })
-        .catch(next);
+        .catch((err) => {
+          if (err.name === 'CastError') {
+            return next(new InaccurateDataError('Некорректный id карточки'));
+          }
+
+          return next(err);
+        });
     });
 };
 
