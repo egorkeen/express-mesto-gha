@@ -9,7 +9,7 @@ module.exports = (req, res, next) => {
     return next(new AuthorizeError('Неверные почта или пароль'));
   }
 
-  const token = authorization.replace('Bearer', '');
+  const token = authorization.replace('Bearer ', '');
   let payload;
 
   try {
@@ -18,7 +18,7 @@ module.exports = (req, res, next) => {
       'some-secret-key',
     );
   } catch (err) {
-    next(new AuthorizeError('Неверные почта или пароль'));
+    return next(new AuthorizeError('Неверные почта или пароль'));
   }
 
   req.user = payload;
