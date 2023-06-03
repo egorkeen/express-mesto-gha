@@ -12,7 +12,7 @@ const cardRouter = require('./routes/cards');
 const userRouter = require('./routes/users');
 const signInRouter = require('./routes/sign-in');
 const signUpRouter = require('./routes/sign-up');
-const { auth } = require('./middlewares/auth');
+const auth = require('./middlewares/auth');
 
 // создаем порт
 const PORT = process.env.PORT || 3000;
