@@ -14,9 +14,6 @@ const {
   celebrateUpdateUserAvatar,
 } = require('../middlewares/celebrate');
 
-const { auth } = require('../middlewares/auth');
-
-userRouter.use(auth);
 userRouter.get('/users', getUsers);
 userRouter.get('/users/me', getCurrentUser);
 userRouter.get('/users/:userId', celebrateGetUserById, getUserById);

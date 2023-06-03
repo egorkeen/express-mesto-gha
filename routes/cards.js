@@ -9,9 +9,7 @@ const {
 const {
   celebrateCreateCard,
 } = require('../middlewares/celebrate');
-const { auth } = require('../middlewares/auth');
 
-CardRouter.use(auth);
 CardRouter.get('/cards', getCards);
 CardRouter.post('/cards', celebrateCreateCard, createCard);
 CardRouter.delete('/cards/:cardId', deleteCard);
