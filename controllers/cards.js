@@ -38,29 +38,32 @@ module.exports.createCard = (req, res, next) => {
 // удалить карточку
 module.exports.deleteCard = (req, res, next) => {
   const { cardId } = req.params;
-  const owner = req.user._id;
 
   Card.findById(cardId)
     .then((card) => {
       if (!card) {
-        throw new NotFoundError('Карточка с данным id не найдена');
+        throw new NotFoundError('Карточка не найдена');
       }
 
-      if (card.owner.toString() !== owner) {
+      if (card.owner.toString() !== req.user._id) {
         throw new NoRightsError('Нет прав для удаления карточки');
       }
 
       return Card.findByIdAndRemove(cardId)
-        .then((deletedCard) => {
-          res.send(deletedCard);
+        .populate(['owner', 'likes'])
+        .then((myCard) => {
+          res.send({ data: myCard });
         })
         .catch((err) => {
-          if (err.name === 'CastError') {
-            return next(new InaccurateDataError('Некорректный id карточки'));
-          }
-
-          return next(err);
+          next(err);
         });
+    })
+    .catch((err) => {
+      if (err.name === 'CastError') {
+        return next(new InaccurateDataError('Некорректный id карточки'));
+      }
+
+      return next(err);
     });
 };
 
