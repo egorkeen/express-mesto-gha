@@ -11,19 +11,20 @@ const AuthorizeError = require('../errors/AuthorizeError');
 module.exports.login = (req, res, next) => {
   const { email, password } = req.body;
 
-  User.findUserByCredentials(email, password)
+  User
+    .findUserByCredentials(email, password)
     .then(({ _id: userId }) => {
-      if (!userId) {
-        throw new AuthorizeError('Неправильные почта или пароль');
+      if (userId) {
+        const token = jwt.sign(
+          { userId },
+          'some-secret-key',
+          { expiresIn: '7d' },
+        );
+
+        return res.send({ _id: token });
       }
 
-      const token = jwt.sign(
-        { userId },
-        'some-secret-key',
-        { expiresIn: '7d' },
-      );
-
-      res.send({ token });
+      throw new AuthorizeError('Неправильные почта или пароль');
     })
     .catch(next);
 };
