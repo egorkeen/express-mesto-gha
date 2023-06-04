@@ -4,26 +4,26 @@ const jwt = require('jsonwebtoken');
 const User = require('../models/user');
 const NotFoundError = require('../errors/NotFoundError');
 const InaccurateDataError = require('../errors/InaccurateDataError');
-const AuthorizeError = require('../errors/AuthorizeError');
 const ConflictError = require('../errors/ConflictError');
+const AuthorizeError = require('../errors/AuthorizeError');
 
 // войти в аккаунт
 module.exports.login = (req, res, next) => {
   const { email, password } = req.body;
 
   User.findUserByCredentials(email, password)
-    .then(({ _id }) => {
-      if (_id) {
-        const token = jwt.sign(
-          { _id },
-          'some-secret-key',
-          { expiresIn: '7d' },
-        );
-
-        res.send({ token });
-      } else {
-        throw new AuthorizeError('Неверные почта или пароль');
+    .then(({ _id: userId }) => {
+      if (!userId) {
+        throw new AuthorizeError('Неправильные почта или пароль');
       }
+
+      const token = jwt.sign(
+        { userId },
+        'some-secret-key',
+        { expiresIn: '7d' },
+      );
+
+      res.send({ token });
     })
     .catch(next);
 };
