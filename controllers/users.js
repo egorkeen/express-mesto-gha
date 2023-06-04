@@ -20,9 +20,10 @@ module.exports.login = (req, res, next) => {
           { expiresIn: '7d' },
         );
 
-        return res.send({ token });
+        res.send({ token });
+      } else {
+        throw new AuthorizeError('Неверные почта или пароль');
       }
-      throw new AuthorizeError('Неверные почта или пароль');
     })
     .catch(next);
 };
