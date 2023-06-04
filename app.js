@@ -29,13 +29,14 @@ app.use(signInRouter);
 app.use(signUpRouter);
 app.use(auth, cardRouter);
 app.use(auth, userRouter);
+
 // отслеживаем ошибки
-app.use(errors());
-app.use(handleErrors);
 // создаем миддлуэр на случай несуществующей страницы
 app.use(auth, (req, res, next) => {
   next(new NotFoundError('Страница не найдена'));
 });
+app.use(errors());
+app.use(handleErrors);
 
 // подключение к базе данных
 mongoose.connect('mongodb://127.0.0.1:27017/mestodb');

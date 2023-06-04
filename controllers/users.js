@@ -12,10 +12,10 @@ module.exports.login = (req, res, next) => {
   const { email, password } = req.body;
 
   User.findUserByCredentials(email, password)
-    .then((user) => {
-      if (user) {
+    .then(({ _id: userId }) => {
+      if (userId) {
         const token = jwt.sign(
-          { _id: user._id },
+          { userId },
           'some-secret-key',
           { expiresIn: '7d' },
         );
