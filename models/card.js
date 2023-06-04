@@ -1,4 +1,5 @@
 const mongoose = require('mongoose');
+const URL_REGEX = require('../utils/constants');
 // схема карточки
 const cardSchema = mongoose.Schema({
   // имя
@@ -12,6 +13,10 @@ const cardSchema = mongoose.Schema({
   link: {
     type: String,
     required: true,
+    validate: {
+      validator: URL_REGEX,
+      message: 'Необходимо ввести корректный URL',
+    },
   },
   // владелец
   owner: {

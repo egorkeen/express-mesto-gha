@@ -5,14 +5,19 @@ const mongoose = require('mongoose');
 const { errors } = require('celebrate');
 const bodyParser = require('body-parser');
 const handleErrors = require('./middlewares/handleErrors');
+
 // app
 const app = express();
+
 // роуты
 const cardRouter = require('./routes/cards');
 const userRouter = require('./routes/users');
 const signInRouter = require('./routes/sign-in');
 const signUpRouter = require('./routes/sign-up');
 const auth = require('./middlewares/auth');
+
+// ошибка 404
+const NotFoundError = require('./errors/NotFoundError');
 
 // создаем порт
 const PORT = process.env.PORT || 3000;
@@ -28,8 +33,8 @@ app.use(auth, userRouter);
 app.use(errors());
 app.use(handleErrors);
 // создаем миддлуэр на случай несуществующей страницы
-app.use((req, res) => {
-  res.status(404).send({ message: 'Страница не найдена' });
+app.use(auth, (req, res, next) => {
+  next(new NotFoundError('Страница не найдена'));
 });
 
 // подключение к базе данных

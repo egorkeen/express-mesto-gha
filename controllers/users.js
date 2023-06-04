@@ -13,17 +13,18 @@ module.exports.login = (req, res, next) => {
 
   User.findUserByCredentials(email, password)
     .then((user) => {
-      const token = jwt.sign(
-        { _id: user._id },
-        'some-secret-key',
-        { expiresIn: '7d' },
-      );
+      if (user) {
+        const token = jwt.sign(
+          { _id: user._id },
+          'some-secret-key',
+          { expiresIn: '7d' },
+        );
 
-      res.send({ token });
+        return res.send({ token });
+      }
+      throw new AuthorizeError('Неверные почта или пароль');
     })
-    .catch(() => {
-      next(new AuthorizeError('Неверные почта или пароль'));
-    });
+    .catch(next);
 };
 
 // создать пользователя

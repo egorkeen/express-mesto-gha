@@ -78,7 +78,6 @@ module.exports.likeCard = (req, res, next) => {
     },
     {
       new: true,
-      runValidators: true,
     },
   )
     .then((card) => {
@@ -88,13 +87,7 @@ module.exports.likeCard = (req, res, next) => {
 
       return res.send(card);
     })
-    .catch((err) => {
-      if (err.name === 'ValidationError') {
-        next(new InaccurateDataError('Переданы некорректные данные карточки'));
-      } else {
-        next(err);
-      }
-    });
+    .catch(next);
 };
 
 // убрать лайк на карточку
@@ -108,7 +101,6 @@ module.exports.dislikeCard = (req, res, next) => {
     },
     {
       new: true,
-      runValidators: true,
     },
   )
     .then((card) => {
@@ -118,11 +110,5 @@ module.exports.dislikeCard = (req, res, next) => {
 
       return res.send(card);
     })
-    .catch((err) => {
-      if (err.name === 'ValidationError') {
-        next(new InaccurateDataError('Переданы некорректные данные карточки'));
-      } else {
-        next(err);
-      }
-    });
+    .catch(next);
 };
